@@ -1,8 +1,9 @@
 import { useState } from "react";
 import "./App.css";
+import type { Item } from "./components/item/item-model";
 
 function App() {
-  const [item, setItem] = useState(null);
+  const [item, setItem] = useState<Item | null>(null);
 
   async function getItem() {
     try {
@@ -19,7 +20,13 @@ function App() {
   return (
     <>
       <button onClick={getItem}>Get Item</button>
-      <div>{item}</div>
+      <div>{item?.name}</div>
+      <div>{item?.value}</div>
+      <div>{item?.rarity}</div>
+      <div>{item?.stats.join(", ")}</div>
+      <div>{item?.modifiers.join(", ")}</div>
+      <div>{item?.dateGotten}</div>
+      <img src={item?.imageKey} alt={item?.name} />
     </>
   );
 }
