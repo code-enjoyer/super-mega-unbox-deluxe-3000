@@ -295,3 +295,4 @@ nunit-*.xml
 .vs
 .vs/slnx.sqlite
 .vs/VSWorkspaceState.json
+/api/.vs/SuperMegaUnboxDeluxe.Api/CopilotIndices/18.10.1181.45497/SemanticSymbols.db
