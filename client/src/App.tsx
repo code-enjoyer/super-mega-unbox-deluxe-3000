@@ -5,18 +5,15 @@ function App() {
   const [item, setItem] = useState(null);
 
   async function getItem() {
-    const response = await fetch("http://localhost:5077/items", {
-      method: "POST",
-      body: null,
-      headers: {
-        Host: "localhost:5077",
-      },
-    }).catch((error) => {
+    try {
+      const response = await fetch("http://localhost:5077/items", {
+        method: "POST",
+      });
+
+      setItem(await response.json());
+    } catch (error) {
       console.error("Error fetching item:", error);
-    });
-    console.log(response);
-    const data = await response.json();
-    setItem(data);
+    }
   }
 
   return (
