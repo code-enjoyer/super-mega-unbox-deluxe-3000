@@ -4,3 +4,9 @@ GET {{SuperMegaUnboxDeluxe.Api_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
+
+POST {{SuperMegaUnboxDeluxe.Api_HostAddress}}/item/
+Content-Type: text/plain
+Content-Length: 0
+
+###

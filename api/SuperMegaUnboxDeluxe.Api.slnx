@@ -1,3 +1,5 @@
 <Solution>
   <Project Path="SuperMegaUnboxDeluxe.Api/SuperMegaUnboxDeluxe.Api.csproj" />
+  <Project Path="SuperMegaUnboxDeluxe.Domain/SuperMegaUnboxDeluxe.Domain.csproj" Id="ed6e108a-7d9f-4069-9346-954dbb40cfdb" />
+  <Project Path="SuperMegaUnboxDeluxe.Infrastructure/SuperMegaUnboxDeluxe.Infrastructure.csproj" Id="ef00a0d0-f1b9-4eda-b5aa-34647c013f55" />
 </Solution>
