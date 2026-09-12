@@ -7,12 +7,20 @@
       "RelativeMoniker": "D:0:0:{EC4D1A38-2243-D9C7-328C-12755E0EE82C}|SuperMegaUnboxDeluxe.Api\\SuperMegaUnboxDeluxe.Api.csproj|solutionrelative:supermegaunboxdeluxe.api\\controllers\\itemscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{EC4D1A38-2243-D9C7-328C-12755E0EE82C}|SuperMegaUnboxDeluxe.Api\\SuperMegaUnboxDeluxe.Api.csproj|d:\\projects\\super-mega-unbox-deluxe-3000\\api\\supermegaunboxdeluxe.api\\supermegaunboxdeluxe.api.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}",
-      "RelativeMoniker": "D:0:0:{EC4D1A38-2243-D9C7-328C-12755E0EE82C}|SuperMegaUnboxDeluxe.Api\\SuperMegaUnboxDeluxe.Api.csproj|solutionrelative:supermegaunboxdeluxe.api\\supermegaunboxdeluxe.api.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{EC4D1A38-2243-D9C7-328C-12755E0EE82C}|SuperMegaUnboxDeluxe.Api\\SuperMegaUnboxDeluxe.Api.csproj|d:\\projects\\super-mega-unbox-deluxe-3000\\api\\supermegaunboxdeluxe.api\\controllers\\weatherforecastcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{EC4D1A38-2243-D9C7-328C-12755E0EE82C}|SuperMegaUnboxDeluxe.Api\\SuperMegaUnboxDeluxe.Api.csproj|solutionrelative:supermegaunboxdeluxe.api\\controllers\\weatherforecastcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EC4D1A38-2243-D9C7-328C-12755E0EE82C}|SuperMegaUnboxDeluxe.Api\\SuperMegaUnboxDeluxe.Api.csproj|d:\\projects\\super-mega-unbox-deluxe-3000\\api\\supermegaunboxdeluxe.api\\supermegaunboxdeluxe.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{EC4D1A38-2243-D9C7-328C-12755E0EE82C}|SuperMegaUnboxDeluxe.Api\\SuperMegaUnboxDeluxe.Api.csproj|solutionrelative:supermegaunboxdeluxe.api\\supermegaunboxdeluxe.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ED6E108A-7D9F-4069-9346-954DBB40CFDB}|SuperMegaUnboxDeluxe.Domain\\SuperMegaUnboxDeluxe.Domain.csproj|d:\\projects\\super-mega-unbox-deluxe-3000\\api\\supermegaunboxdeluxe.domain\\imagekey.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{ED6E108A-7D9F-4069-9346-954DBB40CFDB}|SuperMegaUnboxDeluxe.Domain\\SuperMegaUnboxDeluxe.Domain.csproj|solutionrelative:supermegaunboxdeluxe.domain\\imagekey.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EC4D1A38-2243-D9C7-328C-12755E0EE82C}|SuperMegaUnboxDeluxe.Api\\SuperMegaUnboxDeluxe.Api.csproj|d:\\projects\\super-mega-unbox-deluxe-3000\\api\\supermegaunboxdeluxe.api\\supermegaunboxdeluxe.api.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}",
+      "RelativeMoniker": "D:0:0:{EC4D1A38-2243-D9C7-328C-12755E0EE82C}|SuperMegaUnboxDeluxe.Api\\SuperMegaUnboxDeluxe.Api.csproj|solutionrelative:supermegaunboxdeluxe.api\\supermegaunboxdeluxe.api.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{EC4D1A38-2243-D9C7-328C-12755E0EE82C}|SuperMegaUnboxDeluxe.Api\\SuperMegaUnboxDeluxe.Api.csproj|d:\\projects\\super-mega-unbox-deluxe-3000\\api\\supermegaunboxdeluxe.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -42,16 +50,42 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": 8,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
+              "Title": "SuperMegaUnboxDeluxe.Api",
+              "DocumentMoniker": "D:\\Projects\\super-mega-unbox-deluxe-3000\\api\\SuperMegaUnboxDeluxe.Api\\SuperMegaUnboxDeluxe.Api.csproj",
+              "RelativeDocumentMoniker": "SuperMegaUnboxDeluxe.Api\\SuperMegaUnboxDeluxe.Api.csproj",
+              "ToolTip": "D:\\Projects\\super-mega-unbox-deluxe-3000\\api\\SuperMegaUnboxDeluxe.Api\\SuperMegaUnboxDeluxe.Api.csproj",
+              "RelativeToolTip": "SuperMegaUnboxDeluxe.Api\\SuperMegaUnboxDeluxe.Api.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-09-12T05:00:04.614Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "ImageKey.cs",
+              "DocumentMoniker": "D:\\Projects\\super-mega-unbox-deluxe-3000\\api\\SuperMegaUnboxDeluxe.Domain\\ImageKey.cs",
+              "RelativeDocumentMoniker": "SuperMegaUnboxDeluxe.Domain\\ImageKey.cs",
+              "ToolTip": "D:\\Projects\\super-mega-unbox-deluxe-3000\\api\\SuperMegaUnboxDeluxe.Domain\\ImageKey.cs",
+              "RelativeToolTip": "SuperMegaUnboxDeluxe.Domain\\ImageKey.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-12T04:59:10.308Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
               "Title": "SuperMegaUnboxDeluxe.Api.http",
               "DocumentMoniker": "D:\\Projects\\super-mega-unbox-deluxe-3000\\api\\SuperMegaUnboxDeluxe.Api\\SuperMegaUnboxDeluxe.Api.http",
               "RelativeDocumentMoniker": "SuperMegaUnboxDeluxe.Api\\SuperMegaUnboxDeluxe.Api.http",
-              "ToolTip": "D:\\Projects\\super-mega-unbox-deluxe-3000\\api\\SuperMegaUnboxDeluxe.Api\\SuperMegaUnboxDeluxe.Api.http*",
-              "RelativeToolTip": "SuperMegaUnboxDeluxe.Api\\SuperMegaUnboxDeluxe.Api.http*",
+              "ToolTip": "D:\\Projects\\super-mega-unbox-deluxe-3000\\api\\SuperMegaUnboxDeluxe.Api\\SuperMegaUnboxDeluxe.Api.http",
+              "RelativeToolTip": "SuperMegaUnboxDeluxe.Api\\SuperMegaUnboxDeluxe.Api.http",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAYAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003502|",
               "WhenOpened": "2026-09-12T04:42:02.261Z",
@@ -59,7 +93,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 6,
               "Title": "WeatherForecast.cs",
               "DocumentMoniker": "D:\\Projects\\super-mega-unbox-deluxe-3000\\api\\SuperMegaUnboxDeluxe.Api\\WeatherForecast.cs",
               "RelativeDocumentMoniker": "SuperMegaUnboxDeluxe.Api\\WeatherForecast.cs",
@@ -72,7 +106,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 8,
               "Title": "User.cs",
               "DocumentMoniker": "D:\\Projects\\super-mega-unbox-deluxe-3000\\api\\SuperMegaUnboxDeluxe.Domain\\User.cs",
               "RelativeDocumentMoniker": "SuperMegaUnboxDeluxe.Domain\\User.cs",
@@ -85,7 +119,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 7,
               "Title": "UserItem.cs",
               "DocumentMoniker": "D:\\Projects\\super-mega-unbox-deluxe-3000\\api\\SuperMegaUnboxDeluxe.Domain\\UserItem.cs",
               "RelativeDocumentMoniker": "SuperMegaUnboxDeluxe.Domain\\UserItem.cs",
@@ -98,7 +132,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 9,
               "Title": "Class1.cs",
               "DocumentMoniker": "D:\\Projects\\super-mega-unbox-deluxe-3000\\api\\SuperMegaUnboxDeluxe.Infrastructure\\Class1.cs",
               "RelativeDocumentMoniker": "SuperMegaUnboxDeluxe.Infrastructure\\Class1.cs",
@@ -111,7 +145,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "WeatherForecastController.cs",
               "DocumentMoniker": "D:\\Projects\\super-mega-unbox-deluxe-3000\\api\\SuperMegaUnboxDeluxe.Api\\Controllers\\WeatherForecastController.cs",
               "RelativeDocumentMoniker": "SuperMegaUnboxDeluxe.Api\\Controllers\\WeatherForecastController.cs",
@@ -130,14 +164,14 @@
               "RelativeDocumentMoniker": "SuperMegaUnboxDeluxe.Api\\Controllers\\ItemsController.cs",
               "ToolTip": "D:\\Projects\\super-mega-unbox-deluxe-3000\\api\\SuperMegaUnboxDeluxe.Api\\Controllers\\ItemsController.cs",
               "RelativeToolTip": "SuperMegaUnboxDeluxe.Api\\Controllers\\ItemsController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAXAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-09-12T04:13:14.359Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 5,
               "Title": "Program.cs",
               "DocumentMoniker": "D:\\Projects\\super-mega-unbox-deluxe-3000\\api\\SuperMegaUnboxDeluxe.Api\\Program.cs",
               "RelativeDocumentMoniker": "SuperMegaUnboxDeluxe.Api\\Program.cs",
