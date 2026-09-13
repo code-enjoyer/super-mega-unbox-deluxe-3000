@@ -11,11 +11,12 @@ public sealed class CorrelationIdMiddleware : IMiddleware
 {
     public Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
-        if (!context.Request.Headers.TryGetValue<StringValues, string>(Constants.Headers.CorrelationId, out var correlationId) ||
+        if (!context.Request.Headers.TryGetString(Constants.Headers.CorrelationId, out var correlationId) ||
             correlationId.IsEmpty())
             correlationId = Guid.NewGuid().ToString("N");
 
         context.Response.Headers.Append(Constants.Headers.CorrelationId, correlationId);
+        context.TraceIdentifier = correlationId;
 
         return next(context);
     }
