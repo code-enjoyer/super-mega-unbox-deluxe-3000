@@ -20,6 +20,15 @@ public class Program
     {
         builder.Services.AddControllers();
         builder.Services.AddOpenApi();
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("Client", policy =>
+            {
+                policy.WithOrigins("http://localhost:5173")
+                      .AllowAnyHeader()
+                      .AllowAnyMethod();
+            });
+        });
     }
 
     private static void ConfigureApplication(WebApplication app)
@@ -30,6 +39,7 @@ public class Program
 
         app.UseHttpsRedirection();
         app.UseAuthorization();
+        app.UseCors("Client");
         app.MapControllers();
     }
 }
