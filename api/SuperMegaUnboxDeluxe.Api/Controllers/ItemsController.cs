@@ -9,8 +9,8 @@ namespace SuperMegaUnboxDeluxe.Api.Controllers;
 [Route("[controller]")]
 public class ItemsController : ControllerBase
 {
-    [HttpGet("{id:guid}", Name = "GetItemDetails")]
-    public async Task<ActionResult<Item>> GetItemDetailsAsync(Guid id, CancellationToken cancellationToken)
+    [HttpGet("{id:guid}", Name = Constants.Actions.GetItemDetails)]
+    public async Task<ActionResult<Item>> GetItemDetailsAsync([FromRoute] Guid id, CancellationToken cancellationToken)
     {
         var item = new Item
         {
@@ -28,7 +28,7 @@ public class ItemsController : ControllerBase
         return Ok(item);
     }
 
-    [HttpPost(Name = "GenerateItem")]
+    [HttpPost(Name = Constants.Actions.GenerateItem)]
     public async Task<ActionResult<Item>> GenerateItemAsync([FromBody] ItemRequest? request, CancellationToken cancellationToken)
     {
         var item = new Item
@@ -44,7 +44,7 @@ public class ItemsController : ControllerBase
             Value = 1000.0f
         };
 
-        return CreatedAtAction("GetItemDetails",
+        return CreatedAtAction(Constants.Actions.GetItemDetails,
             new { id = item.Id },
             item);
     }

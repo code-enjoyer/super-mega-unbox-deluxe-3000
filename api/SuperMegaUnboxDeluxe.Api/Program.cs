@@ -1,9 +1,12 @@
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Scalar.AspNetCore;
+using SuperMegaUnboxDeluxe.Api.Correlation;
 using SuperMegaUnboxDeluxe.Api.HealthChecks;
+using SuperMegaUnboxDeluxe.Api.Logging;
 using SuperMegaUnboxDeluxe.Api.Settings;
 using SuperMegaUnboxDeluxe.Application.Extensions.ConfigurationExtensions;
 using SuperMegaUnboxDeluxe.Infrastructure;
@@ -34,6 +37,8 @@ public static class Program
                 .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
                 .AddEnvironmentVariables()
                 .AddUserSecrets(typeof(Program).Assembly);
+
+            builder.Host.ConfigureLogging();
 
             ConfigureServices(builder.Services, builder.Configuration);
 
@@ -68,6 +73,7 @@ public static class Program
         services.AddExceptionHandler<GlobalExceptionHandler>();
         services.AddSettings(configuration);
         services.AddInfrastructure(configuration);
+        services.AddSingleton<CorrelationIdMiddleware>();
         services.AddSmudHealthChecks();
         services.AddCors(options =>
         {
@@ -101,9 +107,12 @@ public static class Program
         }
 
         app.UseCors(SmudClientCorsPolicyName);
-        app.UseStatusCodePages();
         app.UseHttpsRedirection();
+        app.UseCorrelationId();
         app.UseAuthorization();
+        app.UseLogging();
+        app.UseStatusCodePages();
+        app.MapGet("/", () => Results.Redirect("/scalar"));
         app.MapControllers();
     }
 
