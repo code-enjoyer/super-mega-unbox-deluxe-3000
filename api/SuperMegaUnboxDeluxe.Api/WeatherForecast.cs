@@ -1,3 +1,5 @@
+using System;
+
 namespace SuperMegaUnboxDeluxe.Api;
 
 public class WeatherForecast

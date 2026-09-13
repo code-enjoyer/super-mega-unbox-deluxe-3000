@@ -1,13 +1,21 @@
-﻿namespace SuperMegaUnboxDeluxe.Domain;
+﻿using SuperMegaUnboxDeluxe.Domain.Enums;
+using System;
+using System.Collections.Generic;
+
+namespace SuperMegaUnboxDeluxe.Domain;
 
 public class UserItem
 {
-    public string? ItemBase { get; set; }
-    public string? Name { get; set; }
-    public string[]? Stats { get; set; }
-    public string[]? Modifiers { get; set; }
-    public string? Rarity { get; set; }
-    public string? ImageKey { get; set; }
-    public string? DateGotten { get; set; }
-    public string? Value { get; set; }
+    private List<ItemStat> _stats = new();
+    private List<ItemModifier> _modifiers = new();
+
+    public ItemBase Base { get; private set; }
+    public string Name { get; private set; }
+    public ItemRarity Rarity { get; private set; }
+    public string ImageKey { get; private set; }
+    public DateTimeOffset DateGotten { get; private set; }
+    public float Value { get; private set; }
+
+    public IReadOnlyList<ItemStat> Stats => _stats.AsReadOnly();
+    public IReadOnlyList<ItemModifier> Modifiers => _modifiers.AsReadOnly();
 }

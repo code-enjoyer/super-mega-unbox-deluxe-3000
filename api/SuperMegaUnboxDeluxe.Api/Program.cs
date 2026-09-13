@@ -1,45 +1,117 @@
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Scalar.AspNetCore;
+using SuperMegaUnboxDeluxe.Api.HealthChecks;
+using SuperMegaUnboxDeluxe.Api.Settings;
+using SuperMegaUnboxDeluxe.Application.Extensions.ConfigurationExtensions;
+using SuperMegaUnboxDeluxe.Infrastructure;
+using System;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace SuperMegaUnboxDeluxe.Api;
 
-public class Program
+public static class Program
 {
-    public static void Main(string[] args)
+    private const string SmudClientCorsPolicyName = "SmudClient";
+
+    public static async Task<int> Main(string[] args)
     {
-        var builder = WebApplication.CreateBuilder(args);
+        AppDomain.CurrentDomain.UnhandledException += AppUnhandledException;
 
-        ConfigureServices(builder);
+        try
+        {
+            var builder = WebApplication.CreateBuilder(new WebApplicationOptions
+            {
+                ContentRootPath = Directory.GetCurrentDirectory(),
+                EnvironmentName = Environment.GetEnvironmentVariable(Constants.EnvironmentVariables.AspNetEnvironment)
+            });
 
-        var app = builder.Build();
+            builder.Configuration
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
+                .AddEnvironmentVariables()
+                .AddUserSecrets(typeof(Program).Assembly);
 
-        ConfigureApplication(app);
+            ConfigureServices(builder.Services, builder.Configuration);
 
-        app.Run();
+            var app = builder.Build();
+
+            ConfigureApplication(app);
+
+            await app.RunAsync();
+
+            return 0;
+        }
+        catch (Exception exception)
+        {
+            Console.WriteLine($"An error occurred: {exception.Message}");
+            Console.WriteLine(exception?.StackTrace);
+
+            return 1;
+        }
+        finally
+        {
+
+        }
     }
 
-    private static void ConfigureServices(WebApplicationBuilder builder)
+    private static void ConfigureServices(IServiceCollection services, IConfiguration configuration)
     {
-        builder.Services.AddControllers();
-        builder.Services.AddOpenApi();
-        builder.Services.AddCors(options =>
+        services.AddOpenApi(options =>
         {
-            options.AddPolicy("Client", policy =>
+            options.AddScalarTransformers();
+        });
+        services.AddProblemDetails();
+        services.AddExceptionHandler<GlobalExceptionHandler>();
+        services.AddSettings(configuration);
+        services.AddInfrastructure(configuration);
+        services.AddSmudHealthChecks();
+        services.AddCors(options =>
+        {
+            options.AddPolicy(name: SmudClientCorsPolicyName, policy =>
             {
-                policy.WithOrigins("http://localhost:5173")
-                      .AllowAnyHeader()
-                      .AllowAnyMethod();
+                policy.WithOrigins(configuration.GetRequiredConnectionString(Infrastructure.Constants.ConnectionStringNames.SmudClient))
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
             });
         });
+
+        services.AddControllers()
+            .AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+                options.JsonSerializerOptions.AllowOutOfOrderMetadataProperties = true;
+            });
     }
 
     private static void ConfigureApplication(WebApplication app)
     {
-        // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
+        {
             app.MapOpenApi();
+            app.MapScalarApiReference();
+            app.UseDeveloperExceptionPage();
+        }
+        else
+        {
+            app.UseExceptionHandler("/error");
+        }
 
+        app.UseCors(SmudClientCorsPolicyName);
+        app.UseStatusCodePages();
         app.UseHttpsRedirection();
         app.UseAuthorization();
-        app.UseCors("Client");
         app.MapControllers();
+    }
+
+    private static void AppUnhandledException(object sender, UnhandledExceptionEventArgs e)
+    {
+        var exception = e.ExceptionObject as Exception;
+
+        Console.WriteLine($"Unhandled exception: {exception?.Message}");
+        Console.WriteLine(exception?.StackTrace);
     }
 }

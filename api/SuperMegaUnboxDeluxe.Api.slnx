@@ -1,5 +1,7 @@
 <Solution>
   <Project Path="SuperMegaUnboxDeluxe.Api/SuperMegaUnboxDeluxe.Api.csproj" />
+  <Project Path="SuperMegaUnboxDeluxe.Application/SuperMegaUnboxDeluxe.Application.csproj" Id="bf8beee5-ff4f-4aa4-982e-c8c319883426" />
+  <Project Path="SuperMegaUnboxDeluxe.Common/SuperMegaUnboxDeluxe.Common.csproj" Id="e792d810-344b-4fd5-a062-5a0d9a9e3609" />
   <Project Path="SuperMegaUnboxDeluxe.Domain/SuperMegaUnboxDeluxe.Domain.csproj" Id="ed6e108a-7d9f-4069-9346-954dbb40cfdb" />
   <Project Path="SuperMegaUnboxDeluxe.Infrastructure/SuperMegaUnboxDeluxe.Infrastructure.csproj" Id="ef00a0d0-f1b9-4eda-b5aa-34647c013f55" />
 </Solution>
