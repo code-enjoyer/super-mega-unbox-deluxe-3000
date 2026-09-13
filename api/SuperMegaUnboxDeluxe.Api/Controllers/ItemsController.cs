@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Text.Json;
+using SuperMegaUnboxDeluxe.Api.Contracts;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SuperMegaUnboxDeluxe.Api.Controllers;
 
@@ -7,61 +10,43 @@ namespace SuperMegaUnboxDeluxe.Api.Controllers;
 [Route("[controller]")]
 public class ItemsController : ControllerBase
 {
-    [HttpGet("{id:guid}", Name = "GetItemDetails")]
-    public async Task<ActionResult<Item>> GetItemDetailsAsync(Guid id, CancellationToken cancellationToken)
+    [HttpGet("{id:guid}", Name = Constants.Actions.GetItemDetails)]
+    public async Task<ActionResult<Item>> GetItemDetailsAsync([FromRoute] Guid id, CancellationToken cancellationToken)
     {
         var item = new Item
         {
             Id = id,
             ItemBase = "Sword",
             Name = "Excalibur",
-            Stats = new[] { "Attack: 100", "Durability: 80" },
-            Modifiers = new[] { "+10% Critical Hit Chance", "+5% Attack Speed" },
+            Stats = new[] { new Item.ItemStat { Name = "Attack", Value = "100" }, new Item.ItemStat { Name = "Durability", Value = "80" } },
+            Modifiers = new[] { new Item.ItemModifier { Name = "Critical Hit Chance", Value = "+10%" }, new Item.ItemModifier { Name = "Attack Speed", Value = "+5%" } },
             Rarity = "Legendary",
             ImageKey = "excalibur",
-            DateGotten = DateTime.UtcNow.ToString("yyyy-MM-dd"),
-            Value = "1000 Gold"
+            DateGotten = DateTimeOffset.UtcNow,
+            Value = 1000.0f
         };
 
         return Ok(item);
     }
 
-    [HttpPost(Name = "GenerateItem")]
-    public async Task<ActionResult<Item>> GenerateItemAsync([FromBody] ItemRequest? request, CancellationToken cancellationToken)
+    [HttpPost(Name = Constants.Actions.GenerateItem)]
+    public async Task<ActionResult<Item>> GenerateItemAsync([FromBody] GenerateItemRequest? request, CancellationToken cancellationToken)
     {
         var item = new Item
         {
             Id = Guid.NewGuid(),
             ItemBase = "Sword",
             Name = "Excalibur",
-            Stats = new[] { "Attack: 100", "Durability: 80" },
-            Modifiers = new[] { "+10% Critical Hit Chance", "+5% Attack Speed" },
+            Stats = new[] { new Item.ItemStat { Name = "Attack", Value = "100" }, new Item.ItemStat { Name = "Durability", Value = "80" } },
+            Modifiers = new[] { new Item.ItemModifier { Name = "Critical Hit Chance", Value = "+10%" }, new Item.ItemModifier { Name = "Attack Speed", Value = "+5%" } },
             Rarity = "Legendary",
             ImageKey = "excalibur",
-            DateGotten = DateTime.UtcNow.ToString("yyyy-MM-dd"),
-            Value = "1000 Gold"
+            DateGotten = DateTimeOffset.UtcNow,
+            Value = 1000.0f
         };
 
-        return CreatedAtAction("GetItemDetails",
+        return CreatedAtAction(Constants.Actions.GetItemDetails,
             new { id = item.Id },
             item);
-    }
-
-    public class ItemRequest
-    {
-        public string? ItemType { get; init; } = null;
-    }
-
-    public class Item
-    {
-        public Guid Id { get; set; }
-        public string ItemBase { get; init; }
-        public string Name { get; init; }
-        public string[] Stats { get; init; }
-        public string[] Modifiers { get; init; }
-        public string Rarity { get; init; }
-        public string ImageKey { get; init; }
-        public string DateGotten { get; init; }
-        public string Value { get; init; }
     }
 }

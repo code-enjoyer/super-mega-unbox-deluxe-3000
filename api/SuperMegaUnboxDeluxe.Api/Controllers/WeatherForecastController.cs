@@ -1,4 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
+using SuperMegaUnboxDeluxe.Api.Contracts;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SuperMegaUnboxDeluxe.Api.Controllers;
 
