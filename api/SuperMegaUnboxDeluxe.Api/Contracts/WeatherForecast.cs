@@ -1,6 +1,6 @@
 using System;
 
-namespace SuperMegaUnboxDeluxe.Api;
+namespace SuperMegaUnboxDeluxe.Api.Contracts;
 
 public class WeatherForecast
 {

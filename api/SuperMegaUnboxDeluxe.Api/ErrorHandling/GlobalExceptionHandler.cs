@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SuperMegaUnboxDeluxe.Api;
+namespace SuperMegaUnboxDeluxe.Api.ErrorHandling;
 
 public sealed class GlobalExceptionHandler : IExceptionHandler
 {

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SuperMegaUnboxDeluxe.Api.Contracts;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -29,7 +30,7 @@ public class ItemsController : ControllerBase
     }
 
     [HttpPost(Name = Constants.Actions.GenerateItem)]
-    public async Task<ActionResult<Item>> GenerateItemAsync([FromBody] ItemRequest? request, CancellationToken cancellationToken)
+    public async Task<ActionResult<Item>> GenerateItemAsync([FromBody] GenerateItemRequest? request, CancellationToken cancellationToken)
     {
         var item = new Item
         {
@@ -47,35 +48,5 @@ public class ItemsController : ControllerBase
         return CreatedAtAction(Constants.Actions.GetItemDetails,
             new { id = item.Id },
             item);
-    }
-
-    public class ItemRequest
-    {
-        public string? ItemType { get; init; } = null;
-    }
-
-    public class Item
-    {
-        public Guid Id { get; set; }
-        public required string ItemBase { get; init; }
-        public required string Name { get; init; }
-        public required ItemStat[] Stats { get; init; }
-        public required ItemModifier[] Modifiers { get; init; }
-        public required string Rarity { get; init; }
-        public required string ImageKey { get; init; }
-        public DateTimeOffset DateGotten { get; init; }
-        public float Value { get; init; }
-
-        public class ItemStat
-        {
-            public required string Name { get; init; }
-            public required string Value { get; init; }
-        }
-
-        public class ItemModifier
-        {
-            public required string Name { get; init; }
-            public required string Value { get; init; }
-        }
     }
 }

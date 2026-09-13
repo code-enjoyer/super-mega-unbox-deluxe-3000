@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Scalar.AspNetCore;
 using SuperMegaUnboxDeluxe.Api.Correlation;
+using SuperMegaUnboxDeluxe.Api.ErrorHandling;
 using SuperMegaUnboxDeluxe.Api.HealthChecks;
 using SuperMegaUnboxDeluxe.Api.Logging;
 using SuperMegaUnboxDeluxe.Api.Settings;
