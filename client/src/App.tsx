@@ -19,14 +19,23 @@ function App() {
 
   return (
     <>
-      <button onClick={getItem}>Get Item</button>
-      <div>{item?.name}</div>
-      <div>{item?.value}</div>
-      <div>{item?.rarity}</div>
-      <div>{item?.stats.join(", ")}</div>
-      <div>{item?.modifiers.join(", ")}</div>
-      <div>{item?.dateGotten}</div>
-      <img src={item?.imageKey} alt={item?.name} />
+      <div className="header">
+        <h1>Super Mega Unbox Deluxe 3000</h1>
+      </div>
+      <div className="main-content">
+        <button onClick={getItem}>Press this BUTTON to get an ITEM</button>
+      </div>
+      {item && (
+        <>
+          <div>{item?.name}</div>
+          <div>{item?.value}</div>
+          <div>{item?.rarity}</div>
+          <div>{item?.stats.join(", ")}</div>
+          <div>{item?.modifiers.join(", ")}</div>
+          <div>{item?.dateGotten}</div>
+          <img src={item?.imageKey} alt={item?.name} />
+        </>
+      )}
     </>
   );
 }
