@@ -1,6 +1,6 @@
 ﻿using SuperMegaUnboxDeluxe.Domain.Enums;
 
-namespace SuperMegaUnboxDeluxe.Domain;
+namespace SuperMegaUnboxDeluxe.Domain.Entities;
 
 public class ItemStat
 {

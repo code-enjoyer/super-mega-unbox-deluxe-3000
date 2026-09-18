@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SuperMegaUnboxDeluxe.Domain;
+namespace SuperMegaUnboxDeluxe.Domain.Entities;
 
 public class ItemModifier
 {

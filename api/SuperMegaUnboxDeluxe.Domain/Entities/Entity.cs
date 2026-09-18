@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace SuperMegaUnboxDeluxe.Domain;
+namespace SuperMegaUnboxDeluxe.Domain.Entities;
 
 public abstract class Entity
 {
