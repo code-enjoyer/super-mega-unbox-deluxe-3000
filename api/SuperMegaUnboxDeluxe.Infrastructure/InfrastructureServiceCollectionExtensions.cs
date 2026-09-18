@@ -13,18 +13,11 @@ public static class InfrastructureServiceCollectionExtensions
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        // TODO: Set up local db to connect to
-
-        return services;
-
         var connectionString = configuration.GetRequiredConnectionString(Constants.ConnectionStringNames.SmudDatabase);
 
         services.AddDbContext<SmudDbContext>(options =>
         {
-            options.UseNpgsql(connectionString, npgsqlOptions =>
-            {
-
-            });
+            options.UseNpgsql(connectionString);
         });
         services.AddScoped<IUnitOfWork>(provider => provider.GetRequiredService<SmudDbContext>());
 
