@@ -2,5 +2,8 @@
 
 public interface IItemRepository
 {
-    // TODO: Define repository methods
+    void Add(Domain.Entities.Item item);
+    System.Threading.Tasks.Task<Domain.Entities.Item?> GetByIdAsync(
+        System.Guid id,
+        System.Threading.CancellationToken cancellationToken);
 }

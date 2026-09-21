@@ -6,6 +6,7 @@
     <ImplicitUsings>disable</ImplicitUsings>
     <UserSecretsId>9ff6354a-05b9-4741-8abb-183632241b47</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileRunArguments>--network=super-mega-unbox-deluxe-3000_default --publish 5077:8080</DockerfileRunArguments>
   </PropertyGroup>
 
   <ItemGroup>

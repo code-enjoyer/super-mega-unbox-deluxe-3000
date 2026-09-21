@@ -7,11 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Persistence\Configurations\**" />
     <Compile Remove="Persistence\Outbox\**" />
-    <EmbeddedResource Remove="Persistence\Configurations\**" />
     <EmbeddedResource Remove="Persistence\Outbox\**" />
-    <None Remove="Persistence\Configurations\**" />
     <None Remove="Persistence\Outbox\**" />
   </ItemGroup>
 

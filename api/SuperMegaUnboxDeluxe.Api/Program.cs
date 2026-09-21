@@ -40,8 +40,8 @@ public static class Program
             builder.Configuration
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
-                .AddEnvironmentVariables()
-                .AddUserSecrets(typeof(Program).Assembly);
+                .AddUserSecrets(typeof(Program).Assembly)
+                .AddEnvironmentVariables();
 
             builder.Host.ConfigureLogging();
 

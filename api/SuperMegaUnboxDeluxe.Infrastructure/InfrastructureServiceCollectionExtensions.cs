@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SuperMegaUnboxDeluxe.Application;
 using SuperMegaUnboxDeluxe.Application.Extensions.ConfigurationExtensions;
+using SuperMegaUnboxDeluxe.Application.Repositories;
 using SuperMegaUnboxDeluxe.Infrastructure.Persistence;
 
 namespace SuperMegaUnboxDeluxe.Infrastructure;
@@ -20,6 +21,7 @@ public static class InfrastructureServiceCollectionExtensions
             options.UseNpgsql(connectionString);
         });
         services.AddScoped<IUnitOfWork>(provider => provider.GetRequiredService<SmudDbContext>());
+        services.AddScoped<IItemRepository, ItemRepository>();
 
         return services;
     }

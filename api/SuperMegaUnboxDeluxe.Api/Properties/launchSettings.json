@@ -27,9 +27,9 @@
       "environmentVariables": {
         "ASPNETCORE_HTTP_PORTS": "8080",
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "ConnectionStrings__SmudDatabase": "Host=host.docker.internal;Port=5433;Database=smud_dev;Username=smud_user;Password=smud_password"
+        "ConnectionStrings__SmudDatabase": "Host=smud-postgres;Port=5432;Database=smud_dev;Username=smud_user;Password=smud_password"
       },
-      "httpPort": 5000,
+      "httpPort": 5077,
       "publishAllPorts": false,
       "useSSL": false
     }

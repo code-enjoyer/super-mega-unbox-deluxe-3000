@@ -8,10 +8,13 @@ public abstract class Entity
 {
     private readonly List<IDomainEvent> _domainEvents = new();
 
-    public Guid Id { get; }
+    public Guid Id { get; private set; }
     public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
 
-    protected Entity() { }
+    protected Entity()
+    {
+        Id = Guid.NewGuid();
+    }
 
     public IReadOnlyCollection<IDomainEvent> DequeueDomainEvents()
     {
