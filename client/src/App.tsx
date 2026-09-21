@@ -7,7 +7,7 @@ function App() {
 
   async function getItem() {
     try {
-      const response = await fetch("http://localhost:5077/items", {
+      const response = await fetch("http://localhost:5000/items", {
         method: "POST",
       });
 

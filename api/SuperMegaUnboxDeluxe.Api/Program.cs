@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -130,6 +131,7 @@ public static class Program
         app.UseLogging();
         app.UseStatusCodePages();
         app.MapGet("/", () => Results.Redirect("/scalar"));
+        app.MapHealthChecks("/health", new HealthCheckOptions());
         app.MapControllers();
     }
 

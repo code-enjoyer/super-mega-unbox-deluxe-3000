@@ -14,7 +14,8 @@ COPY SuperMegaUnboxDeluxe.Domain/*.csproj ./SuperMegaUnboxDeluxe.Domain/
 COPY SuperMegaUnboxDeluxe.Common/*.csproj ./SuperMegaUnboxDeluxe.Common/
 COPY SuperMegaUnboxDeluxe.Infrastructure/*.csproj ./SuperMegaUnboxDeluxe.Infrastructure/
 
-RUN dotnet restore SuperMegaUnboxDeluxe.Api.slnx
+RUN dotnet restore SuperMegaUnboxDeluxe.Api.slnx \
+    /p:RestoreFallbackFolders=
 
 COPY . .
 
@@ -30,6 +31,10 @@ RUN dotnet publish SuperMegaUnboxDeluxe.Api/SuperMegaUnboxDeluxe.Api.csproj \
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
 
 WORKDIR /app
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends curl \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY --from=build /app .
 
