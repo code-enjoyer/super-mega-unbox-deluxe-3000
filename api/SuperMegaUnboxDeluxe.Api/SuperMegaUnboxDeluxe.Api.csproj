@@ -5,6 +5,8 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>disable</ImplicitUsings>
     <UserSecretsId>9ff6354a-05b9-4741-8abb-183632241b47</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileRunArguments>--network=super-mega-unbox-deluxe-3000_default --publish 5077:8080</DockerfileRunArguments>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,6 +15,7 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.12" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.12" />
     <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="10.0.12" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.24.2-preview.1" />
     <PackageReference Include="Scalar.AspNetCore" Version="2.17.3" />
     <PackageReference Include="Scalar.AspNetCore.Microsoft" Version="2.17.3" />
     <PackageReference Include="Serilog.AspNetCore" Version="10.0.0" />

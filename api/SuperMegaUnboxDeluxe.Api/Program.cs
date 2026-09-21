@@ -1,9 +1,12 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using Scalar.AspNetCore;
+using Serilog;
 using SuperMegaUnboxDeluxe.Api.Correlation;
 using SuperMegaUnboxDeluxe.Api.ErrorHandling;
 using SuperMegaUnboxDeluxe.Api.HealthChecks;
@@ -11,6 +14,7 @@ using SuperMegaUnboxDeluxe.Api.Logging;
 using SuperMegaUnboxDeluxe.Api.Settings;
 using SuperMegaUnboxDeluxe.Application.Extensions.ConfigurationExtensions;
 using SuperMegaUnboxDeluxe.Infrastructure;
+using SuperMegaUnboxDeluxe.Infrastructure.Persistence;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -24,7 +28,7 @@ public static class Program
     public static async Task<int> Main(string[] args)
     {
         AppDomain.CurrentDomain.UnhandledException += AppUnhandledException;
-
+        Log.Information("Starting");
         try
         {
             var builder = WebApplication.CreateBuilder(new WebApplicationOptions
@@ -36,14 +40,21 @@ public static class Program
             builder.Configuration
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
-                .AddEnvironmentVariables()
-                .AddUserSecrets(typeof(Program).Assembly);
+                .AddUserSecrets(typeof(Program).Assembly)
+                .AddEnvironmentVariables();
 
             builder.Host.ConfigureLogging();
 
             ConfigureServices(builder.Services, builder.Configuration);
 
             var app = builder.Build();
+
+            // Initialize database migrations based on configuration
+            var apiSettings = app.Services.GetRequiredService<IOptions<ApiSettings>>().Value;
+            if (apiSettings.AutoApplyMigrations)
+            {
+                await app.Services.InitializeDatabaseAsync();
+            }
 
             ConfigureApplication(app);
 
@@ -96,10 +107,16 @@ public static class Program
 
     private static void ConfigureApplication(WebApplication app)
     {
-        if (app.Environment.IsDevelopment())
+        var apiSettings = app.Services.GetRequiredService<IOptions<ApiSettings>>().Value;
+
+        if (apiSettings.EnableOpenApi)
         {
             app.MapOpenApi();
             app.MapScalarApiReference();
+        }
+
+        if (apiSettings.EnableDeveloperExceptionPage)
+        {
             app.UseDeveloperExceptionPage();
         }
         else
@@ -114,6 +131,7 @@ public static class Program
         app.UseLogging();
         app.UseStatusCodePages();
         app.MapGet("/", () => Results.Redirect("/scalar"));
+        app.MapHealthChecks("/health", new HealthCheckOptions());
         app.MapControllers();
     }
 
@@ -121,7 +139,6 @@ public static class Program
     {
         var exception = e.ExceptionObject as Exception;
 
-        Console.WriteLine($"Unhandled exception: {exception?.Message}");
-        Console.WriteLine(exception?.StackTrace);
+        Log.Error(exception, $"Encountered unhandled exception.");
     }
 }
