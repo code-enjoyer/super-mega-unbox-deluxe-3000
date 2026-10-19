@@ -15,7 +15,8 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="../SuperMegaUnboxDeluxe.Infrastructure/SuperMegaUnboxDeluxe.Infrastructure.csproj" />
+    <ProjectReference Include="../SuperMegaUnboxDeluxe.Api/SuperMegaUnboxDeluxe.Api.csproj" />
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
     <Using Include="Xunit" />
   </ItemGroup>
 </Project>

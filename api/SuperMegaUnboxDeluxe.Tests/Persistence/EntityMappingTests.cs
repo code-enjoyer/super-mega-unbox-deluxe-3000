@@ -3,8 +3,9 @@ using SuperMegaUnboxDeluxe.Domain.Entities;
 using SuperMegaUnboxDeluxe.Domain.Events;
 using SuperMegaUnboxDeluxe.Infrastructure.Persistence;
 
-namespace SuperMegaUnboxDeluxe.Persistence.Tests;
+namespace SuperMegaUnboxDeluxe.Tests.Persistence;
 
+[Trait("Category", "Unit")]
 public sealed class EntityMappingTests
 {
     [Fact]
