@@ -9,17 +9,20 @@ using SuperMegaUnboxDeluxe.Domain.Entities;
 using SuperMegaUnboxDeluxe.Domain.Items.Generation;
 using SuperMegaUnboxDeluxe.Infrastructure;
 using SuperMegaUnboxDeluxe.Infrastructure.Persistence;
+using SuperMegaUnboxDeluxe.Tests.Integration.Api;
+using SuperMegaUnboxDeluxe.Tests.TestSupport;
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json.Nodes;
 
-namespace SuperMegaUnboxDeluxe.Tests;
+namespace SuperMegaUnboxDeluxe.Tests.Integration.Infrastructure.Persistence;
 
+[Trait("Category", "Integration")]
+[Trait("Category", "Postgres")]
 public sealed class PostgresTests
 {
     [PostgresFact]
-    [Trait("Category", "Postgres")]
-    public async Task Upgrade_preserves_legacy_items_and_http_rolls_round_trip_using_shared_bases()
+    public async Task SmudDbContext_LegacyUpgradeAndHttpGeneration_ShouldPreserveItemsAndReuseSharedBases()
     {
         // Use a unique schema in the supplied database. No CREATEDB permission is needed;
         // migrations and cleanup affect only this test's schema, never the public schema.

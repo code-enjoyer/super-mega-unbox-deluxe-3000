@@ -4,16 +4,18 @@ using SuperMegaUnboxDeluxe.Application.Items.Catalog;
 using SuperMegaUnboxDeluxe.Application.Repositories;
 using SuperMegaUnboxDeluxe.Domain.Entities;
 using SuperMegaUnboxDeluxe.Domain.Items.Generation;
+using SuperMegaUnboxDeluxe.Tests.TestSupport;
 
-namespace SuperMegaUnboxDeluxe.Tests;
+namespace SuperMegaUnboxDeluxe.Tests.Unit.Application.Items;
 
-public sealed class ApplicationTests
+[Trait("Category", "Unit")]
+public sealed class GenerateItemServiceTests
 {
     [Theory]
     [InlineData(null)]
     [InlineData("suspicious-lost-property")]
     [InlineData("definitely-legal-arms-dealer")]
-    public async Task Known_and_default_sources_save_once_with_the_supplied_time(string? source)
+    public async Task GenerateItemService_KnownOrDefaultSource_ShouldSaveOnceWithSuppliedTime(string? source)
     {
         var store = new FakeStore();
         using var cancellation = new CancellationTokenSource();
@@ -31,7 +33,7 @@ public sealed class ApplicationTests
     [InlineData("unknown")]
     [InlineData("")]
     [InlineData(" ")]
-    public async Task Unknown_sources_do_not_read_or_write(string source)
+    public async Task GenerateItemService_UnknownSource_ShouldNotReadOrWrite(string source)
     {
         var store = new FakeStore();
         Assert.Null(await Service(store).GenerateAsync(source, default));
@@ -41,7 +43,7 @@ public sealed class ApplicationTests
     }
 
     [Fact]
-    public async Task Cancellation_before_generation_does_not_read_or_write()
+    public async Task GenerateItemService_CancelledBeforeGeneration_ShouldNotReadOrWrite()
     {
         var store = new FakeStore();
         await Assert.ThrowsAsync<OperationCanceledException>(() => Service(store).GenerateAsync(null, new CancellationToken(true)));
@@ -51,7 +53,7 @@ public sealed class ApplicationTests
     }
 
     [Fact]
-    public async Task Cancellation_after_base_lookup_does_not_add_an_item()
+    public async Task GenerateItemService_CancelledAfterBaseLookup_ShouldNotAddItem()
     {
         using var cancellation = new CancellationTokenSource();
         var store = new FakeStore { AfterRead = cancellation.Cancel };
@@ -61,7 +63,7 @@ public sealed class ApplicationTests
     }
 
     [Fact]
-    public async Task Missing_seed_data_fails_without_inserting_a_replacement_base()
+    public async Task GenerateItemService_MissingSeedData_ShouldThrowWithoutInsertingReplacementBase()
     {
         var store = new FakeStore { MissingBase = true };
         await Assert.ThrowsAsync<InvalidOperationException>(() => Service(store).GenerateAsync(null, default));
@@ -70,7 +72,7 @@ public sealed class ApplicationTests
     }
 
     [Fact]
-    public async Task Save_failure_is_not_reported_as_success()
+    public async Task GenerateItemService_SaveFailure_ShouldPropagateException()
     {
         var store = new FakeStore { FailSave = true };
         await Assert.ThrowsAsync<InvalidOperationException>(() => Service(store).GenerateAsync(null, default));

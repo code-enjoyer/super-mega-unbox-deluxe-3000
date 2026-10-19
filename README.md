@@ -53,7 +53,12 @@ The current `Unit/Infrastructure/Persistence/SmudDbContextTests.cs` tests valida
 EF Core entity mapping and compatibility with the existing migration snapshot.
 They inspect the PostgreSQL provider's model without connecting to a database,
 so they are categorized as unit tests. No database or Docker setup is needed for
-these tests; there are no external-service integration tests in this branch yet.
+these tests. Service and generation unit tests live under `Unit/Application/Items`
+and `Unit/Domain/Items/Generation`. HTTP contract tests live under `Integration/Api`
+and start a local host with in-memory persistence; no database is needed. PostgreSQL
+migration and HTTP round-trip tests live under `Integration/Infrastructure/Persistence`
+and require the opt-in database setup described below. Shared deterministic random
+draws live in `TestSupport/SequenceRandom.cs`.
 
 ## Item generation MVP
 

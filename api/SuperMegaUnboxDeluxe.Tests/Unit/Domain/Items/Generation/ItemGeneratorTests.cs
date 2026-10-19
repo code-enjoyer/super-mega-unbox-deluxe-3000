@@ -1,11 +1,12 @@
 using SuperMegaUnboxDeluxe.Application.Items.Catalog;
 using SuperMegaUnboxDeluxe.Domain.Enums;
 using SuperMegaUnboxDeluxe.Domain.Items.Generation;
-using System.Collections.Immutable;
+using SuperMegaUnboxDeluxe.Tests.TestSupport;
 
-namespace SuperMegaUnboxDeluxe.Tests;
+namespace SuperMegaUnboxDeluxe.Tests.Unit.Domain.Items.Generation;
 
-public sealed class GenerationTests
+[Trait("Category", "Unit")]
+public sealed class ItemGeneratorTests
 {
     private readonly StarterItemCatalog _catalog = new();
 
@@ -32,7 +33,7 @@ public sealed class GenerationTests
     [InlineData(1, 96, ItemRarity.Legendary)]
     [InlineData(1, 99, ItemRarity.Legendary)]
     [InlineData(1, 100, ItemRarity.Unique)]
-    public void Rarity_boundaries_are_inclusive(int source, int draw, ItemRarity expected)
+    public void ItemGenerator_RarityBoundaryDraw_ShouldSelectExpectedRarity(int source, int draw, ItemRarity expected)
     {
         var result = new ItemGenerator(new SequenceRandom(draw)).Roll(_catalog, _catalog.Sources[source]);
         Assert.Equal(expected, result.Rarity);
@@ -41,7 +42,7 @@ public sealed class GenerationTests
     [Theory]
     [InlineData(3, 40, 70)]
     [InlineData(8, 100, 180)]
-    public void Common_stat_ranges_include_both_ends(int damage, int durability, int value)
+    public void ItemGenerator_CommonStatBoundaryDraw_ShouldIncludeBothRangeEnds(int damage, int durability, int value)
     {
         var result = Roll(1, 0, damage, durability);
         Assert.Equal(damage.ToString(), result.Stats.Single(x => x.Type == ItemStatType.Damage).Value);
@@ -52,7 +53,7 @@ public sealed class GenerationTests
     }
 
     [Fact]
-    public void Rare_weapon_scales_then_adds_bonuses_and_snapshots_effect_parameters()
+    public void ItemGenerator_RareWeapon_ShouldScaleStatsThenAddBonusesAndSnapshotEffectParameters()
     {
         // rarity, base, stats, prefix/suffix selection, bonus, effect chance/duration
         var result = Roll(81, 0, 3, 40, 1, 0, 2, 15, 3);
@@ -67,7 +68,7 @@ public sealed class GenerationTests
     }
 
     [Fact]
-    public void Armour_gets_compatible_defense_and_durability_bonuses()
+    public void ItemGenerator_Armour_ShouldApplyCompatibleDefenseAndDurabilityBonuses()
     {
         var result = Roll(81, 2, 5, 40, 0, 0, 5, 2);
         Assert.Equal("10", result.Stats.Single(x => x.Type == ItemStatType.Defense).Value);
@@ -77,7 +78,7 @@ public sealed class GenerationTests
     }
 
     [Fact]
-    public void Geese_effect_preserves_its_trigger_and_count()
+    public void ItemGenerator_GeeseEffect_ShouldPreserveTriggerAndCount()
     {
         var result = Roll(81, 3, 2, 40, 0, 1, 5, 5, 1);
         Assert.Equal(new SpecialEffect("emergency-geese", EffectTrigger.OnBeingHit, 5, null, 1),
@@ -88,7 +89,7 @@ public sealed class GenerationTests
     [Theory]
     [InlineData(0, AffixSlot.Prefix)]
     [InlineData(1, AffixSlot.Suffix)]
-    public void Uncommon_can_roll_either_slot(int slot, AffixSlot expected)
+    public void ItemGenerator_UncommonItem_ShouldRollEitherAffixSlot(int slot, AffixSlot expected)
     {
         var result = Roll(56, 0, 3, 40, slot);
         Assert.Equal(expected, Assert.Single(result.Modifiers).Details!.Role);
@@ -97,7 +98,7 @@ public sealed class GenerationTests
     [Theory]
     [InlineData(50, 2)]
     [InlineData(51, 1)]
-    public void Unique_keeps_identity_and_signature_with_optional_bonus(int chance, int count)
+    public void ItemGenerator_UniqueItem_ShouldKeepIdentityAndSignatureWithOptionalBonus(int chance, int count)
     {
         var result = Roll(100, 0, 20, 80, chance);
         Assert.Equal(StarterItemCatalog.SalamanderId, result.BaseId);
@@ -110,7 +111,7 @@ public sealed class GenerationTests
     }
 
     [Fact]
-    public void Each_source_rarity_and_base_has_valid_distinct_affixes()
+    public void ItemGenerator_EachSourceRarityAndBase_ShouldHaveValidDistinctAffixes()
     {
         foreach (var source in _catalog.Sources)
         foreach (var rarity in Enum.GetValues<ItemRarity>().Where(x => x != ItemRarity.Unique))
@@ -125,56 +126,5 @@ public sealed class GenerationTests
         }
     }
 
-    [Fact]
-    public void Invalid_catalog_content_is_rejected()
-    {
-        var catalog = new TestCatalog(_catalog);
-        Assert.Throws<InvalidOperationException>(() => ItemCatalogValidator.Validate(catalog with { DefaultSourceId = "missing" }));
-        Assert.Throws<InvalidOperationException>(() => ItemCatalogValidator.Validate(catalog with { Bases = [catalog.Bases[0], catalog.Bases[0]] }));
-        Assert.Throws<InvalidOperationException>(() => ItemCatalogValidator.Validate(catalog with { Affixes = [] }));
-        Assert.Throws<InvalidOperationException>(() => ItemCatalogValidator.Validate(catalog with { Uniques = [] }));
-        Assert.Throws<InvalidOperationException>(() => ItemCatalogValidator.Validate(catalog with
-        {
-            Bases = catalog.Bases.SetItem(0, catalog.Bases[0] with { Stats = [new(ItemStatType.Damage, new(10, 1))] })
-        }));
-        Assert.Throws<InvalidOperationException>(() => ItemCatalogValidator.Validate(catalog with
-        {
-            Sources = [catalog.Sources[0] with { Rarities = [new(ItemRarity.Common, 0)] }]
-        }));
-        Assert.Throws<InvalidOperationException>(() => ItemCatalogValidator.Validate(catalog with
-        {
-            Affixes = catalog.Affixes.SetItem(0, catalog.Affixes[0] with { CompatibleBases = [Guid.NewGuid()] })
-        }));
-    }
-
     private ItemRoll Roll(params int[] values) => new ItemGenerator(new SequenceRandom(values)).Roll(_catalog, _catalog.Sources[0]);
-
-    private sealed record TestCatalog : IItemCatalog
-    {
-        public string DefaultSourceId { get; init; }
-        public ImmutableArray<BaseDefinition> Bases { get; init; }
-        public ImmutableArray<AffixDefinition> Affixes { get; init; }
-        public ImmutableArray<UniqueDefinition> Uniques { get; init; }
-        public ImmutableArray<LootSourceDefinition> Sources { get; init; }
-
-        public TestCatalog(IItemCatalog original)
-        {
-            DefaultSourceId = original.DefaultSourceId;
-            Bases = original.Bases;
-            Affixes = original.Affixes;
-            Uniques = original.Uniques;
-            Sources = original.Sources;
-        }
-    }
-}
-
-internal sealed class SequenceRandom(params int[] values) : IRandomSource
-{
-    private readonly Queue<int> _values = new(values);
-    public int NextInclusive(int min, int max)
-    {
-        var value = _values.TryDequeue(out var next) ? next : min;
-        Assert.InRange(value, min, max);
-        return value;
-    }
 }

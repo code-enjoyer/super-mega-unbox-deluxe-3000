@@ -1,25 +1,23 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using SuperMegaUnboxDeluxe.Api.Controllers;
 using SuperMegaUnboxDeluxe.Application;
 using SuperMegaUnboxDeluxe.Application.Items.Catalog;
 using SuperMegaUnboxDeluxe.Application.Repositories;
 using SuperMegaUnboxDeluxe.Domain.Entities;
 using SuperMegaUnboxDeluxe.Domain.Items.Generation;
+using SuperMegaUnboxDeluxe.Tests.TestSupport;
 using System.Collections.Concurrent;
 using System.Net;
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json.Nodes;
 
-namespace SuperMegaUnboxDeluxe.Tests;
+namespace SuperMegaUnboxDeluxe.Tests.Integration.Api;
 
+[Trait("Category", "Integration")]
 public sealed class ApiTests
 {
     [Fact]
-    public async Task Http_contract_supports_sources_empty_body_creation_retrieval_and_validation()
+    public async Task Api_ItemGenerationRequests_ShouldSupportSourcesCreationRetrievalAndValidation()
     {
         var store = new MemoryStore();
         await using var host = await TestApiHost.StartAsync(services =>
@@ -75,44 +73,5 @@ public sealed class ApiTests
             var definition = new StarterItemCatalog().Bases.Single(x => x.Id == id);
             return Task.FromResult<ItemBase?>(new ItemBase(id, definition.Name));
         }
-    }
-}
-
-// Exercise real controller routing, model binding and serialization without booting unrelated host services.
-internal sealed class TestApiHost : IAsyncDisposable
-{
-    private readonly WebApplication _app;
-    public HttpClient Client { get; }
-
-    private TestApiHost(WebApplication app)
-    {
-        _app = app;
-        Client = new HttpClient { BaseAddress = new Uri(app.Urls.Single()) };
-    }
-
-    public static async Task<TestApiHost> StartAsync(Action<IServiceCollection> configure)
-    {
-        var builder = WebApplication.CreateBuilder(new WebApplicationOptions
-        {
-            EnvironmentName = "Testing",
-            ApplicationName = typeof(ItemsController).Assembly.GetName().Name
-        });
-        builder.Logging.ClearProviders();
-        builder.WebHost.UseUrls("http://127.0.0.1:0");
-        builder.Services.AddApplication();
-        builder.Services.AddProblemDetails();
-        builder.Services.AddControllers().AddApplicationPart(typeof(ItemsController).Assembly);
-        configure(builder.Services);
-        var app = builder.Build();
-        app.MapControllers();
-        await app.StartAsync();
-        return new TestApiHost(app);
-    }
-
-    public async ValueTask DisposeAsync()
-    {
-        Client.Dispose();
-        await _app.StopAsync();
-        await _app.DisposeAsync();
     }
 }
