@@ -2,6 +2,8 @@
 
 public enum ItemStatType
 {
+    Attack,
+    Durability,
     Damage,
     Defense,
     Speed,

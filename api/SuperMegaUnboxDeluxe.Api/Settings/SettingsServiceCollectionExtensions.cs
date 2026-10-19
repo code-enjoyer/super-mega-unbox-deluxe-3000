@@ -8,6 +8,8 @@ public static class SettingsServiceCollectionExtensions
     public static IServiceCollection AddSettings(this IServiceCollection services, IConfiguration configuration)
     {
         ConfigureSettings<ApplicationSettings>();
+        ConfigureSettings<ApiSettings>();
+        ConfigureSettings<FeatureFlags>();
 
         return services;
 

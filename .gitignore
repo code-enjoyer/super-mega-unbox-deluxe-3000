@@ -294,3 +294,26 @@ nunit-*.xml
 
 .vs
 api/.vs
+
+# PostgreSQL & Database Files
+
+# Docker volumes (local database storage)
+postgres_data/
+
+# Environment files with secrets (if using .env files locally)
+.env
+.env.local
+!.env.example
+
+# EF Core Migration backups
+*.bak
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# pgAdmin
+pgadmin_data/
+
+**/*.csproj.user
