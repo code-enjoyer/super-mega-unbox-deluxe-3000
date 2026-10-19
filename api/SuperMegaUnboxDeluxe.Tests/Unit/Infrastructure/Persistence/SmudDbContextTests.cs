@@ -3,13 +3,13 @@ using SuperMegaUnboxDeluxe.Domain.Entities;
 using SuperMegaUnboxDeluxe.Domain.Events;
 using SuperMegaUnboxDeluxe.Infrastructure.Persistence;
 
-namespace SuperMegaUnboxDeluxe.Tests.Persistence;
+namespace SuperMegaUnboxDeluxe.Tests.Unit.Infrastructure.Persistence;
 
 [Trait("Category", "Unit")]
-public sealed class EntityMappingTests
+public sealed class SmudDbContextTests
 {
     [Fact]
-    public void Shared_mapping_preserves_the_existing_database_schema()
+    public void SmudDbContext_ExistingMappings_ShouldMatchMigrationSnapshot()
     {
         using var db = new SmudDbContext(Options());
 
@@ -17,7 +17,7 @@ public sealed class EntityMappingTests
     }
 
     [Fact]
-    public void Shared_mapping_applies_to_new_entities_without_individual_configuration()
+    public void SmudDbContext_EntityWithoutIndividualConfiguration_ShouldApplySharedMapping()
     {
         using var db = new ProbeDbContext(Options());
 
