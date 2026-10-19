@@ -1,15 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SuperMegaUnboxDeluxe.Api.Contracts;
 using SuperMegaUnboxDeluxe.Application;
 using SuperMegaUnboxDeluxe.Application.Repositories;
+using SuperMegaUnboxDeluxe.Domain.Entities;
 using SuperMegaUnboxDeluxe.Domain.Enums;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using DomainItem = SuperMegaUnboxDeluxe.Domain.Entities.Item;
-using DomainItemBase = SuperMegaUnboxDeluxe.Domain.Entities.ItemBase;
-using DomainItemModifier = SuperMegaUnboxDeluxe.Domain.Entities.ItemModifier;
-using DomainItemStat = SuperMegaUnboxDeluxe.Domain.Entities.ItemStat;
+using Contracts = SuperMegaUnboxDeluxe.Api.Contracts;
 
 namespace SuperMegaUnboxDeluxe.Api.Controllers;
 
@@ -27,7 +24,7 @@ public class ItemsController : ControllerBase
     }
 
     [HttpGet("{id:guid}", Name = Constants.Actions.GetItemDetails)]
-    public async Task<ActionResult<Item>> GetItemDetailsAsync([FromRoute] Guid id, CancellationToken cancellationToken)
+    public async Task<ActionResult<Contracts.Item>> GetItemDetailsAsync([FromRoute] Guid id, CancellationToken cancellationToken)
     {
         var item = await _itemRepository.GetByIdAsync(id, cancellationToken);
 
@@ -35,17 +32,17 @@ public class ItemsController : ControllerBase
     }
 
     [HttpPost(Name = Constants.Actions.GenerateItem)]
-    public async Task<ActionResult<Item>> GenerateItemAsync([FromBody] GenerateItemRequest? request, CancellationToken cancellationToken)
+    public async Task<ActionResult<Contracts.Item>> GenerateItemAsync([FromBody] Contracts.GenerateItemRequest? request, CancellationToken cancellationToken)
     {
-        var item = new DomainItem(
-            new DomainItemBase(request?.ItemType ?? "Sword"),
-            "Excalibur",
-            ItemRarity.Legendary,
-            "excalibur",
-            DateTimeOffset.UtcNow,
-            1000.0f,
-            new[] { new DomainItemStat(ItemStatType.Attack, "100"), new DomainItemStat(ItemStatType.Durability, "80") },
-            new[] { new DomainItemModifier("Critical Hit Chance", "+10%"), new DomainItemModifier("Attack Speed", "+5%") });
+        var item = new Item(
+            itemBase: new ItemBase(name: request?.ItemType ?? "Sword"),
+            name: "Excalibur",
+            rarity: ItemRarity.Legendary,
+            imageKey: "excalibur",
+            dateGotten: DateTimeOffset.UtcNow,
+            value: 1000.0f,
+            stats: new[] { new ItemStat(type: ItemStatType.Attack, value: "100"), new ItemStat(type: ItemStatType.Durability, value: "80") },
+            modifiers: new[] { new ItemModifier(name: "Critical Hit Chance", value: "+10%"), new ItemModifier(name: "Attack Speed", value: "+5%") });
 
         _itemRepository.Add(item);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
@@ -55,13 +52,13 @@ public class ItemsController : ControllerBase
             ToContract(item));
     }
 
-    private static Item ToContract(DomainItem item) => new()
+    private static Contracts.Item ToContract(Item item) => new()
     {
         Id = item.Id,
         ItemBase = item.Base.Name,
         Name = item.Name,
-        Stats = System.Linq.Enumerable.ToArray(System.Linq.Enumerable.Select(item.Stats, stat => new Item.ItemStat { Name = stat.Type.ToString(), Value = stat.Value })),
-        Modifiers = System.Linq.Enumerable.ToArray(System.Linq.Enumerable.Select(item.Modifiers, modifier => new Item.ItemModifier { Name = modifier.Name, Value = modifier.Value })),
+        Stats = System.Linq.Enumerable.ToArray(System.Linq.Enumerable.Select(item.Stats, stat => new Contracts.Item.ItemStat { Name = stat.Type.ToString(), Value = stat.Value })),
+        Modifiers = System.Linq.Enumerable.ToArray(System.Linq.Enumerable.Select(item.Modifiers, modifier => new Contracts.Item.ItemModifier { Name = modifier.Name, Value = modifier.Value })),
         Rarity = item.Rarity.ToString(),
         ImageKey = item.ImageKey,
         DateGotten = item.DateGotten,
