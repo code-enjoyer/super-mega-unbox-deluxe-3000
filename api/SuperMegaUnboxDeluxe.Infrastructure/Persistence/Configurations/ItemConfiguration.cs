@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SuperMegaUnboxDeluxe.Domain.Entities;
+using SuperMegaUnboxDeluxe.Domain.Items.Generation;
+using System.Text.Json;
 
 namespace SuperMegaUnboxDeluxe.Infrastructure.Persistence.Configurations;
 
@@ -32,6 +34,11 @@ internal sealed class ItemConfiguration : IEntityTypeConfiguration<Item>, ISmudD
             modifier.HasKey("Id");
             modifier.Property(x => x.Name).IsRequired();
             modifier.Property(x => x.Value).IsRequired();
+            modifier.Property(x => x.Details)
+                .HasConversion(
+                    details => JsonSerializer.Serialize(details, (JsonSerializerOptions?)null),
+                    json => JsonSerializer.Deserialize<ModifierDetails>(json, (JsonSerializerOptions?)null))
+                .HasColumnType("jsonb");
         });
 
         builder.Navigation(x => x.Stats).UsePropertyAccessMode(PropertyAccessMode.Field);

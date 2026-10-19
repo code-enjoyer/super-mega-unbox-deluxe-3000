@@ -69,6 +69,28 @@ namespace SuperMegaUnboxDeluxe.Infrastructure.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("item_bases", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("fa000000-0000-0000-0000-000000000001"),
+                            Name = "Finger Guns"
+                        },
+                        new
+                        {
+                            Id = new Guid("fa000000-0000-0000-0000-000000000002"),
+                            Name = "Petrified Salamander"
+                        },
+                        new
+                        {
+                            Id = new Guid("fa000000-0000-0000-0000-000000000003"),
+                            Name = "Turtle-Shell Shield"
+                        },
+                        new
+                        {
+                            Id = new Guid("fa000000-0000-0000-0000-000000000004"),
+                            Name = "Suspicious Trench Coat"
+                        });
                 });
 
             modelBuilder.Entity("SuperMegaUnboxDeluxe.Domain.Entities.Item", b =>
@@ -86,6 +108,9 @@ namespace SuperMegaUnboxDeluxe.Infrastructure.Persistence.Migrations
                                 .HasColumnType("integer");
 
                             NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
+
+                            b1.Property<string>("Details")
+                                .HasColumnType("jsonb");
 
                             b1.Property<Guid>("ItemId")
                                 .HasColumnType("uuid");

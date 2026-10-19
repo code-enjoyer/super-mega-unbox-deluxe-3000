@@ -14,7 +14,7 @@ COPY SuperMegaUnboxDeluxe.Domain/*.csproj ./SuperMegaUnboxDeluxe.Domain/
 COPY SuperMegaUnboxDeluxe.Common/*.csproj ./SuperMegaUnboxDeluxe.Common/
 COPY SuperMegaUnboxDeluxe.Infrastructure/*.csproj ./SuperMegaUnboxDeluxe.Infrastructure/
 
-RUN dotnet restore SuperMegaUnboxDeluxe.Api.slnx \
+RUN dotnet restore SuperMegaUnboxDeluxe.Api/SuperMegaUnboxDeluxe.Api.csproj \
     /p:RestoreFallbackFolders=
 
 COPY . .

@@ -1,15 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SuperMegaUnboxDeluxe.Api.Contracts;
-using SuperMegaUnboxDeluxe.Application;
+using SuperMegaUnboxDeluxe.Application.Items;
 using SuperMegaUnboxDeluxe.Application.Repositories;
-using SuperMegaUnboxDeluxe.Domain.Enums;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 using DomainItem = SuperMegaUnboxDeluxe.Domain.Entities.Item;
-using DomainItemBase = SuperMegaUnboxDeluxe.Domain.Entities.ItemBase;
-using DomainItemModifier = SuperMegaUnboxDeluxe.Domain.Entities.ItemModifier;
-using DomainItemStat = SuperMegaUnboxDeluxe.Domain.Entities.ItemStat;
 
 namespace SuperMegaUnboxDeluxe.Api.Controllers;
 
@@ -18,12 +15,12 @@ namespace SuperMegaUnboxDeluxe.Api.Controllers;
 public class ItemsController : ControllerBase
 {
     private readonly IItemRepository _itemRepository;
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly GenerateItemService _generateItem;
 
-    public ItemsController(IItemRepository itemRepository, IUnitOfWork unitOfWork)
+    public ItemsController(IItemRepository itemRepository, GenerateItemService generateItem)
     {
         _itemRepository = itemRepository;
-        _unitOfWork = unitOfWork;
+        _generateItem = generateItem;
     }
 
     [HttpGet("{id:guid}", Name = Constants.Actions.GetItemDetails)]
@@ -35,20 +32,14 @@ public class ItemsController : ControllerBase
     }
 
     [HttpPost(Name = Constants.Actions.GenerateItem)]
-    public async Task<ActionResult<Item>> GenerateItemAsync([FromBody] GenerateItemRequest? request, CancellationToken cancellationToken)
+    public async Task<ActionResult<Item>> GenerateItemAsync(
+        [FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Allow)] GenerateItemRequest? request,
+        CancellationToken cancellationToken)
     {
-        var item = new DomainItem(
-            new DomainItemBase(request?.ItemType ?? "Sword"),
-            "Excalibur",
-            ItemRarity.Legendary,
-            "excalibur",
-            DateTimeOffset.UtcNow,
-            1000.0f,
-            new[] { new DomainItemStat(ItemStatType.Attack, "100"), new DomainItemStat(ItemStatType.Durability, "80") },
-            new[] { new DomainItemModifier("Critical Hit Chance", "+10%"), new DomainItemModifier("Attack Speed", "+5%") });
-
-        _itemRepository.Add(item);
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        var item = await _generateItem.GenerateAsync(request?.LootSourceId, cancellationToken);
+        if (item is null)
+            return Problem(statusCode: 400, title: "Unknown loot source",
+                detail: "Choose a lootSourceId returned by GET /loot-sources.");
 
         return CreatedAtAction(Constants.Actions.GetItemDetails,
             new { id = item.Id },
@@ -61,7 +52,16 @@ public class ItemsController : ControllerBase
         ItemBase = item.Base.Name,
         Name = item.Name,
         Stats = System.Linq.Enumerable.ToArray(System.Linq.Enumerable.Select(item.Stats, stat => new Item.ItemStat { Name = stat.Type.ToString(), Value = stat.Value })),
-        Modifiers = System.Linq.Enumerable.ToArray(System.Linq.Enumerable.Select(item.Modifiers, modifier => new Item.ItemModifier { Name = modifier.Name, Value = modifier.Value })),
+        Modifiers = System.Linq.Enumerable.ToArray(System.Linq.Enumerable.Select(item.Modifiers, modifier => new Item.ItemModifier
+        {
+            Name = modifier.Name,
+            Value = modifier.Value,
+            Details = modifier.Details is { } details ? new Item.ModifierDetails(
+                details.DefinitionId, details.Role.ToString(),
+                details.Bonus is { } bonus ? new Item.StatBonus(bonus.Type.ToString(), bonus.Amount) : null,
+                details.Effect is { } effect ? new Item.SpecialEffect(effect.Id, effect.Trigger.ToString(),
+                    effect.ChancePercent, effect.DurationSeconds, effect.Count) : null) : null
+        })),
         Rarity = item.Rarity.ToString(),
         ImageKey = item.ImageKey,
         DateGotten = item.DateGotten,
