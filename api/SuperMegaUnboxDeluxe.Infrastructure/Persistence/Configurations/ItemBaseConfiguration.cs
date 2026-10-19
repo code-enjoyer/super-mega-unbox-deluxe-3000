@@ -9,8 +9,6 @@ internal sealed class ItemBaseConfiguration : IEntityTypeConfiguration<ItemBase>
     public void Configure(EntityTypeBuilder<ItemBase> builder)
     {
         builder.ToTable("item_bases");
-        builder.HasKey(x => x.Id);
-        builder.Ignore(x => x.DomainEvents);
         builder.Property(x => x.Name).IsRequired();
     }
 }

@@ -1,7 +1,7 @@
 namespace SuperMegaUnboxDeluxe.Api.Settings;
 
 /// <summary>
-/// Configuration for application feature flags that control feature availability and behavior.
+/// Configuration for application feature flags that control feature availability and behaviour.
 /// </summary>
 public class FeatureFlags : ISettings
 {
