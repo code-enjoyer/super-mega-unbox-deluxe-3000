@@ -1,0 +1,8 @@
+<Solution>
+  <Project Path="Api/SuperMegaUnboxDeluxe.Api.csproj" />
+  <Project Path="Application/SuperMegaUnboxDeluxe.Application.csproj" />
+  <Project Path="Common/SuperMegaUnboxDeluxe.Common.csproj" />
+  <Project Path="Domain/SuperMegaUnboxDeluxe.Domain.csproj" />
+  <Project Path="Infrastructure/SuperMegaUnboxDeluxe.Infrastructure.csproj" />
+  <Project Path="Tests/SuperMegaUnboxDeluxe.Tests.csproj" />
+</Solution>

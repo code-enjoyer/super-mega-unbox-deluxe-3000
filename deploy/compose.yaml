@@ -1,0 +1,89 @@
+name: super-mega-unbox-deluxe-3000
+
+services:
+  postgres:
+    build: ./postgres
+    image: smud-postgres:latest
+    container_name: smud-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_ADMIN_PASSWORD:?Set POSTGRES_ADMIN_PASSWORD privately in .env.local}
+      SMUD_DB_PASSWORD: ${SMUD_DB_PASSWORD:?Set SMUD_DB_PASSWORD privately in .env.local}
+    ports:
+      - "127.0.0.1:${POSTGRES_PORT:-5433}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U postgres -d postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+
+  api-migrate:
+    build: &api-build
+      context: ..
+      dockerfile: deploy/api/Dockerfile
+    image: smud-api:latest
+    environment: &persistence
+      ASPNETCORE_ENVIRONMENT: Production
+      Persistence__Host: postgres
+      Persistence__Password: ${SMUD_DB_PASSWORD:?Set SMUD_DB_PASSWORD privately in .env.local}
+    command: ["--migrate"]
+    restart: "no"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  api:
+    build: *api-build
+    image: smud-api:latest
+    container_name: smud-api
+    restart: unless-stopped
+    environment:
+      <<: *persistence
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:8080
+      Telemetry__Enabled: "true"
+      Telemetry__Endpoint: http://aspire:18890/
+      Telemetry__ApiKey: ${ASPIRE_OTLP_API_KEY:?Set ASPIRE_OTLP_API_KEY privately in .env.local}
+    ports:
+      - "127.0.0.1:5000:8080"
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--silent", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    depends_on:
+      api-migrate:
+        condition: service_completed_successfully
+
+  client:
+    build:
+      context: ../client
+      dockerfile: Dockerfile
+    image: smud-client:latest
+    container_name: smud-client
+    restart: unless-stopped
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:5173:80"
+
+  aspire:
+    image: mcr.microsoft.com/dotnet/aspire-dashboard:13.6.1
+    environment:
+      Dashboard__Frontend__AuthMode: BrowserToken
+      Dashboard__Otlp__AuthMode: ApiKey
+      Dashboard__Otlp__PrimaryApiKey: ${ASPIRE_OTLP_API_KEY:?Set ASPIRE_OTLP_API_KEY privately in .env.local}
+    ports:
+      - "127.0.0.1:18898:18888"
+      - "127.0.0.1:4328:18890"
+
+volumes:
+  postgres_data:
+    driver: local

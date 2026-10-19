@@ -1,64 +1,22 @@
 # super-mega-unbox-deluxe-3000
 
-## Tests
+## Backend
 
-`api/SuperMegaUnboxDeluxe.Tests` is the single project for all automated tests,
-including unit and integration tests. It uses xUnit and targets .NET 10.
-It references the API project, giving tests access to the application, domain,
-and infrastructure projects as well as ASP.NET Core hosting APIs.
+The .NET 10 solution is `backend/SuperMegaUnboxDeluxe.slnx`, containing Api,
+Application, Common, Domain, Infrastructure, and Tests projects.
 
-Run all tests from the repository root with the .NET 10 SDK installed:
-
-```powershell
-dotnet test api/SuperMegaUnboxDeluxe.Api.slnx
-```
-
-To run only this project or its unit tests:
+- [Development and tests](docs/development.md)
+- [Backend conventions](docs/backend.md)
+- [Local services, database reset, migrations, and telemetry](deploy/README.md)
 
 ```powershell
-dotnet test api/SuperMegaUnboxDeluxe.Tests/SuperMegaUnboxDeluxe.Tests.csproj
-dotnet test api/SuperMegaUnboxDeluxe.Tests/SuperMegaUnboxDeluxe.Tests.csproj --filter "Category=Unit"
+./dev.ps1 setup -Scope backend
+./dev.ps1 check -Scope backend
 ```
 
-Keep all automated tests in this project. Use a root folder for each
-test type, such as `Unit/` or `Integration/`. Beneath that, generally mirror the
-source project and its folder structure where applicable, using the project
-suffix (`Api`, `Application`, `Domain`, or `Infrastructure`) as the project folder.
-For example, tests for
-`SuperMegaUnboxDeluxe.Infrastructure/Persistence/SmudDbContext.cs` live in:
-
-```text
-SuperMegaUnboxDeluxe.Tests/
-  Unit/
-    Infrastructure/
-      Persistence/
-        SmudDbContextTests.cs
-```
-
-Match test namespaces to their folder paths. Mark test classes or methods with
-`[Trait("Category", "Unit")]` or `[Trait("Category", "Integration")]` to match
-their test-type folder and allow selection with `--filter`. When adding tests
-that need external services, document their setup here and explicitly skip them
-when that setup is absent.
-
-Name test methods using `{SystemUnderTest}_{Scenario}_Should{ExpectedOutcome}()`
-with PascalCase within each part. For example:
-
-```csharp
-SmudDbContext_ExistingMappings_ShouldMatchMigrationSnapshot()
-SmudDbContext_EntityWithoutIndividualConfiguration_ShouldApplySharedMapping()
-```
-
-The current `Unit/Infrastructure/Persistence/SmudDbContextTests.cs` tests validate
-EF Core entity mapping and compatibility with the existing migration snapshot.
-They inspect the PostgreSQL provider's model without connecting to a database,
-so they are categorized as unit tests. No database or Docker setup is needed for
-these tests. Service and generation unit tests live under `Unit/Application/Items`
-and `Unit/Domain/Items/Generation`. HTTP contract tests live under `Integration/Api`
-and start a local host with in-memory persistence; no database is needed. PostgreSQL
-migration and HTTP round-trip tests live under `Integration/Infrastructure/Persistence`
-and require the opt-in database setup described below. Shared deterministic random
-draws live in `TestSupport/SequenceRandom.cs`.
+The new initial migration replaces the old history. Existing development databases
+need the explicit `./dev.ps1 reset-db` workflow after configuring local settings.
+This discards development items. Ordinary start/stop commands retain data.
 
 ## Item generation MVP
 
@@ -78,7 +36,7 @@ special effects. There is no inventory, combat execution, or opening cost yet.
 | `Api/Controllers` and `Api/Contracts` | HTTP validation, response mapping, generation/detail endpoints, and source summaries. |
 | `client/src/components/item` | Item response types and the item-details card. |
 
-Project folders above are inside `api/SuperMegaUnboxDeluxe.<Project>`.
+Project folders above are inside `backend/<Project>`.
 The Domain does not depend on the other projects; Application depends on Domain,
 Infrastructure implements Application's persistence interfaces, and API composes them.
 
@@ -122,29 +80,20 @@ The React client defaults to `http://localhost:5000`; `VITE_API_URL` can overrid
 at build time. Artwork currently uses a placeholder: `imageKey` is an identifier,
 not a URL. Effects are descriptions/data, not executed gameplay.
 
-Apply migrations through the API's configured `Api:AutoApplyMigrations` startup
-option or `dotnet ef database update --project api/SuperMegaUnboxDeluxe.Infrastructure
---startup-project api/SuperMegaUnboxDeluxe.Api` with the correct database connection.
-The API Docker build restores only the API dependency graph, not the test project.
+Apply migrations through the explicit `--migrate` command or the pinned EF tool;
+normal API startup never migrates. Compose runs migrations before API startup.
+See [service operations](deploy/README.md) for setup and commands.
 
 ### Verification
 
 ```powershell
-dotnet test api/SuperMegaUnboxDeluxe.Api.slnx
+dotnet test backend/SuperMegaUnboxDeluxe.slnx
 cd client
 npm run build
 npm run lint
 ```
 
-The PostgreSQL integration test is opt-in: set `SMUD_TEST_POSTGRES` to a connection
-string for the running development/test database before `dotnet test`. It needs
-permission to create a schema, not a database. It creates a uniquely named schema,
-tests upgrading legacy data and HTTP creation/retrieval, then drops only that schema.
-Without the variable, that test is explicitly skipped. Never point it at production.
-
-For Docker-only verification, build the API Dockerfile's `build` target as a test
-image and run `dotnet test` in it on the Compose network, passing `SMUD_TEST_POSTGRES`
-with `Host=postgres;Port=5432` and your configured database credentials. This also
-avoids accidentally connecting to a native PostgreSQL service sharing the published
-host port. `docker compose up -d --build api client` rebuilds the playable app and,
-with development auto-migrations enabled, applies the migration inside Docker.
+PostgreSQL integration tests use disposable Testcontainers by default and require
+Docker. `SMUD_TEST_POSTGRES` optionally supplies a private test database; tests create
+and drop only isolated schemas. Use `--filter 'Category!=Postgres'` to run without
+Docker. See [development](docs/development.md) for test organization and details.
