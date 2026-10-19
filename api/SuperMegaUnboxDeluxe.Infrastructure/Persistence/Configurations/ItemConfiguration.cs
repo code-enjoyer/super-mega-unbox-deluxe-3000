@@ -11,8 +11,6 @@ internal sealed class ItemConfiguration : IEntityTypeConfiguration<Item>, ISmudD
     public void Configure(EntityTypeBuilder<Item> builder)
     {
         builder.ToTable("items");
-        builder.HasKey(x => x.Id);
-        builder.Ignore(x => x.DomainEvents);
         builder.Property(x => x.Name).IsRequired();
         builder.Property(x => x.Rarity).HasConversion<string>().IsRequired();
         builder.Property(x => x.ImageKey).IsRequired();
