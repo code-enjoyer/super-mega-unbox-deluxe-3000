@@ -14,4 +14,9 @@ public class ItemBase : Entity
     {
         Name = name;
     }
+
+    public ItemBase(Guid id, string name) : base(id)
+    {
+        Name = name;
+    }
 }

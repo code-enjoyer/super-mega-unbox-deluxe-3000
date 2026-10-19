@@ -24,5 +24,10 @@ public class Item
     {
         public required string Name { get; init; }
         public required string Value { get; init; }
+        public ModifierDetails? Details { get; init; }
     }
+
+    public sealed record ModifierDetails(string DefinitionId, string Role, StatBonus? Bonus, SpecialEffect? Effect);
+    public sealed record StatBonus(string Type, int Amount);
+    public sealed record SpecialEffect(string Id, string Trigger, int ChancePercent, int? DurationSeconds, int? Count);
 }

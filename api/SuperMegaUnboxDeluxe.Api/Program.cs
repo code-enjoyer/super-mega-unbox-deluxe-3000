@@ -13,6 +13,7 @@ using SuperMegaUnboxDeluxe.Api.HealthChecks;
 using SuperMegaUnboxDeluxe.Api.Logging;
 using SuperMegaUnboxDeluxe.Api.Settings;
 using SuperMegaUnboxDeluxe.Application.Extensions.ConfigurationExtensions;
+using SuperMegaUnboxDeluxe.Application;
 using SuperMegaUnboxDeluxe.Infrastructure;
 using SuperMegaUnboxDeluxe.Infrastructure.Persistence;
 using System;
@@ -84,6 +85,7 @@ public static class Program
         services.AddProblemDetails();
         services.AddExceptionHandler<GlobalExceptionHandler>();
         services.AddSettings(configuration);
+        services.AddApplication();
         services.AddInfrastructure(configuration);
         services.AddSingleton<CorrelationIdMiddleware>();
         services.AddSmudHealthChecks();

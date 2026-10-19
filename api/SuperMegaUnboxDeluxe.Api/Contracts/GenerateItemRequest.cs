@@ -2,5 +2,5 @@
 
 public class GenerateItemRequest
 {
-    public string? ItemType { get; init; } = null;
+    public string? LootSourceId { get; init; }
 }

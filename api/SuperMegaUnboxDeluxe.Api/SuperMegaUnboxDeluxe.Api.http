@@ -1,12 +1,23 @@
-@SuperMegaUnboxDeluxe.Api_HostAddress = http://localhost:5077
+@SuperMegaUnboxDeluxe.Api_HostAddress = http://localhost:5000
 
-GET {{SuperMegaUnboxDeluxe.Api_HostAddress}}/weatherforecast/
+GET {{SuperMegaUnboxDeluxe.Api_HostAddress}}/loot-sources
 Accept: application/json
 
-###
+### Generate from the default source (no body required)
 
-POST {{SuperMegaUnboxDeluxe.Api_HostAddress}}/item/
-Content-Type: text/plain
-Content-Length: 0
+POST {{SuperMegaUnboxDeluxe.Api_HostAddress}}/items
 
-###
+### Choose a source
+
+POST {{SuperMegaUnboxDeluxe.Api_HostAddress}}/items
+Content-Type: application/json
+
+{
+  "lootSourceId": "definitely-legal-arms-dealer"
+}
+
+### Retrieve an item using the Location returned by POST
+
+@itemId = 00000000-0000-0000-0000-000000000000
+GET {{SuperMegaUnboxDeluxe.Api_HostAddress}}/items/{{itemId}}
+Accept: application/json

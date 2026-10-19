@@ -16,6 +16,12 @@ public abstract class Entity
         Id = Guid.NewGuid();
     }
 
+    protected Entity(Guid id)
+    {
+        if (id == Guid.Empty) throw new ArgumentException("An entity ID cannot be empty.", nameof(id));
+        Id = id;
+    }
+
     public IReadOnlyCollection<IDomainEvent> DequeueDomainEvents()
     {
         var events = _domainEvents.ToArray();
